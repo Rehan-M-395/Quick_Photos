@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Photo Collector</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f8f9fa; }
+        video { border: 2px solid #333; border-radius: 10px; }
+        input, button { padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        button { cursor: pointer; background: #007bff; color: white; }
+        button:hover { background: #0056b3; }
+        #status { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>📸 Student Photo Collector</h1>
+
+    <form id="studentForm">
+        <input type="text" id="studentName" placeholder="Enter student name" required>
+        <button type="submit">Set Student</button>
+    </form>
+
+    <div>
+        <img src="{{ url_for('video_feed') }}" width="640" height="480">
+    </div>
+
+    <div>
+        <button onclick="capturePhoto()">Capture Photo</button>
+    </div>
+
+    <div>
+       <div>
+    <button onclick="capturePhoto()">Capture Photo</button>
+    <button onclick="finishStudent()" style="background:#dc3545;">Finish Student</button>
+    <button onclick="stopPhotoshoot()" style="background:#6c757d;">Stop Photoshoot</button>
+</div>
+    </div>
+
+    <p id="status"></p>
+
+    <script>
+        document.getElementById("studentForm").onsubmit = async function(e) {
+            e.preventDefault();
+            let name = document.getElementById("studentName").value;
+            let res = await fetch("/set_student", {
+                method: "POST",
+                body: new URLSearchParams({ student_name: name }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            });
+            document.getElementById("status").innerText = await res.text();
+        };
+
+        async function capturePhoto() {
+            let res = await fetch("/capture", { method: "POST" });
+            document.getElementById("status").innerText = await res.text();
+        }
+        async function finishStudent(){
+            let res = await fetch("/finish_student", { method: "POST" });
+            document.getElementById("status").innerText = await res.text();
+        }
+
+        async function finishStudent() {
+            let res = await fetch("/finish_student", { method: "POST" });
+            document.getElementById("status").innerText = await res.text();
+}
+
+        async function stopPhotoshoot() {
+            let res = await fetch("/stop_photoshoot", { method: "POST" });
+            document.getElementById("status").innerText = await res.text();
+}
+    </script>
+</body>
+</html>
